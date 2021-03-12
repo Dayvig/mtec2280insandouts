@@ -18,36 +18,17 @@ float offset = 0;
 
 int state = 0;
 
-PImage bee;
-PImage flower;
-int flowerHeight = 50;
-boolean held = false;
-int hitboxX;
-int hitboxY;
-int beeX;
-int beeY;
-float ctr = 0;
-float spacing = 30;
-int xMove = 0;
-int yMove = 0;
-
-int caught = 0;
-
 void setup(){
   
   size(1600, 900);
   lArrow = loadImage("larrow.png");
   rArrow = loadImage("rarrow.png");
-  bee = loadImage("bee.png");
-  flower = loadImage("sunflower.png");
   ellipseMode(CENTER);
   currentX = width/2;
   currentY = height/2;
   size(1600, 900);
   background(0, 172, 255);
   frameRate(60);
-  beeX = (int)random(0, width);
-  beeY = (int)random(0, height/2);
 }
 
 void draw(){
@@ -117,6 +98,7 @@ if (state == 1 || state == 2){
     }
       
     currentX = width - 20 + offset;
+    println("BounceRight");
     
   }
   if (currentX < 0){
@@ -129,7 +111,9 @@ if (state == 1 || state == 2){
     }
 
       
-    currentX = 20 + offset;    
+    currentX = 20 + offset;
+    println("BounceLeft");
+    
   }
   if (currentY > height){
     
@@ -137,13 +121,17 @@ if (state == 1 || state == 2){
     
     
     currentY = height - 20;
+    println("BounceBottom");
 
   }
   
   if (currentY < 0){
 
-    angle = -angle; 
+    angle = -angle;
+        
     currentY = 20;
+    println("BounceTop");
+
   }
 
   
@@ -165,81 +153,6 @@ if (state == 1 || state == 2){
     timer = 0;
   }
 }
-  if (state == 3 || state == 4){
-     fill(255);
-     if (state == 3){
-  rect(1600, 0, 1600, 900);
-     }
-     else {
-  rect(0, 0, 1600, 900);
-     }
-  
-    //flower
-    if (held && flowerHeight > -height/2){
-    flowerHeight -= 2;
-  }
-  else if (!held && flowerHeight < 50){
-    flowerHeight += 2;
-  }
-  else if (!held && flowerHeight >= 50){
-    flowerHeight = 50;
-  }
-  if (state == 3){
-    image(flower, mouseX+1600, height + flowerHeight, 500, 1000);
-  }
-  else {
-    image(flower, mouseX, height + flowerHeight, 500, 1000);
-  }
-  hitboxX = mouseX - 40;
-  hitboxY = height + flowerHeight - 240;
-  
-  
-  //bee
-  if (ctr >= spacing){
-    xMove = (int)random(-6, 6);
-    yMove = (int)random(-6, 6);
-    
-    if (beeY < 0){
-      yMove = 6;
-    }
-    if (beeX < 0){
-      xMove = 6;
-    }
-    if (beeY > height){
-      yMove = -6;
-    }
-    if (beeX > width){
-      xMove = -6;
-    }
-    ctr = 0;
-  }
-  else {
-    ctr++;
-  }
-  beeX += xMove;
-  beeY += yMove;
-  if (state == 3){
-  image(bee, beeX+1600, beeY, 80, 80);
-  }
-  else {
-  image(bee, beeX, beeY, 80, 80);
-  }
-  textSize(48);
-  fill(0, 0, 0);
-  if (state == 3){
-  text(""+caught, width/2+1600, height/4 *3);
-  }
-  else {
-  text(""+caught, width/2, height/4 *3);
-  }
-  
-  if ((beeX > (hitboxX - 100) && beeX < (hitboxX + 100) && (beeY > (hitboxY - 100) && beeY < (hitboxY + 100)))){
-    caught++;
-    beeX = (int)random(0, width);
-    beeY = (int)random(0, height);
-      }
-    }
-  
 
 //arrows
 imageMode(CENTER);
@@ -257,13 +170,8 @@ image(rArrow, rightArrowX, 450, 100, 200);
 image(lArrow, leftArrowX, 450, 100, 200);
 }
 
-void mouseReleased(){
-  held = false;
-}
-
-
 void mousePressed(){
-    held = true;
+ 
   /*
   if (state == 0){
     state = 2;
@@ -282,8 +190,8 @@ void mousePressed(){
 void panLeft(){
   if (!panningLeft){
   panningLeft = true;
-  state++;
-  println("State: " + state);
+  state = 1;
+  println("Panning Left");
   panTimer = 60;
   }
 }
@@ -295,6 +203,7 @@ void panRight(){
 void updateGraphics(){
     if (panningLeft){
           offset = (60-panTimer)*26.66666;
+          println("offset: "+offset);
       if (panTimer <= 60 && panTimer > 0){
       translate(-offset, 0);
       }
@@ -302,8 +211,7 @@ void updateGraphics(){
         translate(0, 0);
         panningLeft = false;
         offset = 0;
-        state++;
-        println("State: " + state);
+        state = 2;
       }
     }
     if (panTimer > 0){
