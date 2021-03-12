@@ -32,7 +32,7 @@ noStroke();
 fill(253, 92, 109);
 triangle(0, 0, mouseX, (mouseY - 20), 0, (400 + grow));
 fill(255,  166,  104);
-quad(0, 400, 0, 800, 450, 600, mouseX, (mouseY - 20));
+quad(0, (400 + grow), 0, 800, 450, 600, mouseX, (mouseY - 20));
 fill(206,  145,  249);
 triangle(450, 600, mouseX, (mouseY - 20), 900, 600);
 fill(255,  65,  151);
