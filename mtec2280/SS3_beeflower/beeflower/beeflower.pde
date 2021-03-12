@@ -73,7 +73,7 @@ void draw(){
     caught++;
     println(caught);
     beeX = (int)random(0, width);
-    beeY = (int)random(0, height/2);
+    beeY = (int)random(0, height);
   }
 }
 
