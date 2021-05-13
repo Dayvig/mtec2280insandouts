@@ -53,11 +53,13 @@ abstract class Asteroid {
     if (hp <= 0){
       markForDestruction = true;
     }
+    if (dist(xPos, yPos, playerX, playerY) < size/2){
+        collision();
+    }
   }
   
   void destroy(){
     destructionCtr++;
-    println(destructionCtr);
     if (destructionCtr >= 8){
     Asteroid next;
     int spawning = (int)random(1, 4);
@@ -123,6 +125,7 @@ abstract class Asteroid {
     !markForDestruction
     )
       {
+        ellipseMode(CENTER);  // Set ellipseMode to CENTER
         ellipse(xPos - playerX, yPos - playerY, size, size);
       }
   }

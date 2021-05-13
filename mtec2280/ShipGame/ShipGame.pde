@@ -25,17 +25,21 @@ void setup(){
   println(MOVESPEED);
   background(255);
   frameRate(FRAMERATE);
-  setupAsteroids();
+  //setupAsteroids();
+  Asteroid next = new LargeAsteroid(1000, 1000, 45, 400, 20, 2);
+  Asteroids.add(next);
 }
 
 void draw(){
     background(255);
+    translate(width/2, height/2);
     updateShipMovement();
     drawStaticObjects();
     updateObjectMovement();
     fill(0, 255, 0);
     noStroke();
-    ellipse(600, 400, 20, 20);
+    ellipseMode(CENTER);  // Set ellipseMode to CENTER
+    ellipse(0, 0, 20, 20);
 }
 
 void keyPressed(){
@@ -176,6 +180,11 @@ void setupAsteroids(){
   }
 }
 
+void collision(){
+
+
+
+}
 
 void drawStaticObjects(){
   
