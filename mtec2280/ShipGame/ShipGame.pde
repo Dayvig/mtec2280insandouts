@@ -1,4 +1,4 @@
-float playerX = 1000;
+  float playerX = 1000;
 float playerY = 1000;
 
 int staticObjectX = 2000;
@@ -16,18 +16,21 @@ int FRAMERATE = 60;
 float MOVESPEED = 0.08;
 float FRICTION = 0.008;
 int destructionCtr = 0;
+int blastTimer = 0;
 
 ArrayList<Asteroid> Asteroids = new ArrayList<Asteroid>();
 ArrayList<Asteroid> Temp = new ArrayList<Asteroid>();
+
+ArrayList<Blast> Blasts = new ArrayList<Blast>();
+ArrayList<Blast> DestroyedBlasts = new ArrayList<Blast>();
+ArrayList<Blast> BlastQueue = new ArrayList<Blast>();
 
 void setup(){
   size(1200, 800);
   println(MOVESPEED);
   background(255);
   frameRate(FRAMERATE);
-  //setupAsteroids();
-  Asteroid next = new LargeAsteroid(1000, 1000, 45, 400, 20, 2);
-  Asteroids.add(next);
+  setupAsteroids();
 }
 
 void draw(){
@@ -57,11 +60,6 @@ void keyPressed(){
     }
 }
 
-void mouseClicked(){
-   for (Asteroid a : Asteroids){
-     a.markForDestruction = true;
-   }
-}
 
 void keyReleased(){
     if (key == 'W' || key == 'w'){
@@ -131,7 +129,21 @@ void updateShipMovement(){
   //update position
       playerY += vThrust; 
       playerX += hThrust;
-  
+      
+  //add Blasts
+  if (mousePressed && blastTimer >= 10){
+     float ratio = (float)(mouseY - (height/2)) / (mouseX - (width/2));
+     if ((mouseX - (width/2)) <= 0){
+       ratio = ( radians(180) - (atan(ratio) * -1) );
+     }
+     else {
+       ratio = atan(ratio);
+     }
+     Blast laser = new Blast(playerX, playerY, ratio, 20);
+     BlastQueue.add(laser);
+     blastTimer = 0;
+  }
+  blastTimer++;
 }
 
 void updateObjectMovement(){
@@ -145,10 +157,27 @@ void updateObjectMovement(){
     Temp.add(a);
     }
   }
+  
   for (Asteroid a : Temp){
     a.destroy();
   }
   Temp.clear();
+  
+  for (Blast b : Blasts){
+    b.update();
+    b.render();
+  if (b.markForDestruction){
+    DestroyedBlasts.add(b);
+    }
+  }
+  for (Blast b : DestroyedBlasts){
+    Blasts.remove(b);
+  }
+  DestroyedBlasts.clear();
+  for (Blast b : BlastQueue){
+    Blasts.add(b);
+  }
+  BlastQueue.clear();
 }
 
 void setupAsteroids(){
@@ -159,8 +188,7 @@ void setupAsteroids(){
     float y = random(-4000, 4000);
     int s = (int)random(1, 3);
     float sp = random(1, 4);
-    //int angl = (int)random(0, 180);
-    int angl = 90;
+    int angl = (int)random(0, 180);
     switch (s){
       case 1:
           next = new LargeAsteroid(x, y, angl, 400, 20, s);

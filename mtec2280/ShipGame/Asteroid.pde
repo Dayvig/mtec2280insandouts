@@ -50,16 +50,24 @@ abstract class Asteroid {
     if (xPos > 5000 || xPos < -5000 || yPos > 5000 || yPos < - 5000){
       markForDestruction = true;
     }
-    if (hp <= 0){
-      markForDestruction = true;
-    }
     if (dist(xPos, yPos, playerX, playerY) < size/2){
         collision();
     }
+    for (Blast b : Blasts){
+       if (dist(xPos, yPos, b.xPos, b.yPos) < size/2){
+        hp -= b.damage;
+        b.markForDestruction = true;
+      }
+    }
+    if (hp <= 0){
+      markForDestruction = true;
+    }
+
   }
   
   void destroy(){
     destructionCtr++;
+    println(destructionCtr);
     if (destructionCtr >= 8){
     Asteroid next;
     int spawning = (int)random(1, 4);
@@ -100,28 +108,30 @@ abstract class Asteroid {
       case 1:
           next = new LargeAsteroid(x, y, angl, 400, 20, s);
               Asteroids.add(next);
+                  destructionCtr = 0;
           break;
        case 2:
           next = new MediumAsteroid(x, y, angl, 200, 10, s*2);
               Asteroids.add(next);
+                  destructionCtr = 4;
           break;
         case 3:
           next = new SmallAsteroid(x, y, angl, 100, 5, s*4);
               Asteroids.add(next);
+                  destructionCtr = 8;
           break;
         default:
           break;
     }
-    destructionCtr = 0;
   }
   }
   
   void render(){
     if (
-    (xPos - playerX > -500 &&
-    xPos - playerX < 1780 &&
-    yPos - playerY < 1300 &&
-    yPos - playerY > -500) &&
+    (xPos - playerX > -width &&
+    xPos - playerX < width &&
+    yPos - playerY < height &&
+    yPos - playerY > -height) &&
     !markForDestruction
     )
       {
