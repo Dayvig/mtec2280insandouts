@@ -60,6 +60,7 @@ abstract class Asteroid {
       }
     }
     if (hp <= 0){
+      
       markForDestruction = true;
     }
 
@@ -67,7 +68,6 @@ abstract class Asteroid {
   
   void destroy(){
     destructionCtr++;
-    println(destructionCtr);
     if (destructionCtr >= 8){
     Asteroid next;
     int spawning = (int)random(1, 4);
